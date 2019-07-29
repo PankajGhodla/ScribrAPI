@@ -1,0 +1,14 @@
+C:\Users\Pankaj\Desktop\ScribrAPI\ScribrAPI\bin\Debug\netcoreapp2.2\ScribrAPI.deps.json
+C:\Users\Pankaj\Desktop\ScribrAPI\ScribrAPI\bin\Debug\netcoreapp2.2\ScribrAPI.runtimeconfig.json
+C:\Users\Pankaj\Desktop\ScribrAPI\ScribrAPI\bin\Debug\netcoreapp2.2\ScribrAPI.runtimeconfig.dev.json
+C:\Users\Pankaj\Desktop\ScribrAPI\ScribrAPI\bin\Debug\netcoreapp2.2\ScribrAPI.dll
+C:\Users\Pankaj\Desktop\ScribrAPI\ScribrAPI\bin\Debug\netcoreapp2.2\ScribrAPI.pdb
+C:\Users\Pankaj\Desktop\ScribrAPI\ScribrAPI\obj\Debug\netcoreapp2.2\ScribrAPI.csprojAssemblyReference.cache
+C:\Users\Pankaj\Desktop\ScribrAPI\ScribrAPI\obj\Debug\netcoreapp2.2\ScribrAPI.csproj.CoreCompileInputs.cache
+C:\Users\Pankaj\Desktop\ScribrAPI\ScribrAPI\obj\Debug\netcoreapp2.2\ScribrAPI.RazorAssemblyInfo.cache
+C:\Users\Pankaj\Desktop\ScribrAPI\ScribrAPI\obj\Debug\netcoreapp2.2\ScribrAPI.RazorAssemblyInfo.cs
+C:\Users\Pankaj\Desktop\ScribrAPI\ScribrAPI\obj\Debug\netcoreapp2.2\ScribrAPI.AssemblyInfoInputs.cache
+C:\Users\Pankaj\Desktop\ScribrAPI\ScribrAPI\obj\Debug\netcoreapp2.2\ScribrAPI.AssemblyInfo.cs
+C:\Users\Pankaj\Desktop\ScribrAPI\ScribrAPI\obj\Debug\netcoreapp2.2\ScribrAPI.RazorTargetAssemblyInfo.cache
+C:\Users\Pankaj\Desktop\ScribrAPI\ScribrAPI\obj\Debug\netcoreapp2.2\ScribrAPI.dll
+C:\Users\Pankaj\Desktop\ScribrAPI\ScribrAPI\obj\Debug\netcoreapp2.2\ScribrAPI.pdb
