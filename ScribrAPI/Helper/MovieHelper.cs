@@ -1,10 +1,7 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 using ScribrAPI.Model;
+using System;
+using System.Net;
 
 namespace ScribrAPI.Helper
 {
@@ -21,7 +18,8 @@ namespace ScribrAPI.Helper
             String movieID = URL.Substring(index, 9);
             return movieID;
         }
-        public static Model.Movie GetMovieFromID(String movieID)
+     
+        public static dynamic GetMovieFromID(String movieID)
         {
             String APIKEY = "6910e659fc35ebb1a5f364f7477b8e3d";
             String movieAPILink = "https://api.themoviedb.org/3/movie/" + movieID + "?api_key=" + 
@@ -32,18 +30,32 @@ namespace ScribrAPI.Helper
 
             dynamic jsonObj = JsonConvert.DeserializeObject<dynamic>(movieInfoJSON);
             String title = jsonObj["title"];
-            String poster = jsonObj["poster_path"];
-            String ReleaseDate = jsonObj["release_date"];
-            String MovieLength = jsonObj["runtime"];
-            String IMDBLink = "https://www.imdb.com/title/" + jsonObj[""];
-            String Discription = jsonObj["overview"];
-            String Genres = jsonObj["genres"][0].name;
+            String poster = "https://image.tmdb.org/t/p/w780/" + jsonObj["poster_path"];
+            String date = jsonObj["release_date"];
+            int runtime = jsonObj["runtime"];
+            String link = "https://www.imdb.com/title/" + jsonObj["imdb_id"];
+            String description = jsonObj["overview"];
+            String genres = jsonObj["genres"][0].name;
 
-            Movie movie = new Movie()
+            DateTime objDate = DateTime.Parse(date);
+
+            // getting the genres for the movie.
+            for (int i = 1; i < jsonObj["genres"].Count ; i++)
+            {
+                genres += ", " + jsonObj["genres"][i].name;
+            }
+                
+
+                Movie movie = new Movie()
             {
                 MovieTitle = title,
-                PosterUrl = poster
-            };
+                PosterUrl = poster,
+                ReleaseDate = objDate,
+                MovieLength = runtime,
+                Imdblink = link,
+                Discription = description,
+                Genres = genres
+             };
             return movie;
         }
     }

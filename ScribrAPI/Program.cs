@@ -14,8 +14,8 @@ namespace ScribrAPI
     {
         public static void Main(string[] args)
         {
-            // CreateWebHostBuilder(args).Build().Run();
-            Helper.MovieHelper.TestProgram();
+            CreateWebHostBuilder(args).Build().Run();
+            //Helper.MovieHelper.TestProgram();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>

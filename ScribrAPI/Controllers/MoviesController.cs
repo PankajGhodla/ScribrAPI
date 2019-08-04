@@ -13,6 +13,11 @@ namespace ScribrAPI.Controllers
     [ApiController]
     public class MoviesController : ControllerBase
     {
+        public class URLDTO
+        {
+            public String URL { get; set; }
+        }
+
         private readonly MovieDBContext _context;
 
         public MoviesController(MovieDBContext context)
@@ -73,12 +78,14 @@ namespace ScribrAPI.Controllers
 
         // POST: api/Movies
         [HttpPost]
-        public async Task<ActionResult<Movie>> PostMovie(Movie movie)
+        public async Task<ActionResult<Movie>> PostMovie(URLDTO URL)
         {
-            _context.Movie.Add(movie);
+            String movieID = Helper.MovieHelper.GetMovieFromLink(URL.URL);
+            Movie newMovie = Helper.MovieHelper.GetMovieFromID(movieID);
+            _context.Movie.Add(newMovie);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetMovie", new { id = movie.MovieId }, movie);
+            return CreatedAtAction("GetMovie", new { id = newMovie.MovieId }, newMovie);
         }
 
         // DELETE: api/Movies/5
