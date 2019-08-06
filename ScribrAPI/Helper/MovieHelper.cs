@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using ScribrAPI.Model;
 using System;
+using System.Collections.Generic;
 using System.Net;
 
 namespace ScribrAPI.Helper
@@ -57,6 +58,43 @@ namespace ScribrAPI.Helper
                 Genres = genres
              };
             return movie;
+        }
+        public static List<RelatedMovie> GetRelatedMovies(String movieID)
+        {
+            String APIKEY = "6910e659fc35ebb1a5f364f7477b8e3d";
+            String movieAPISimilarLink = "https://api.themoviedb.org/3/movie/" + movieID + "/similar?api_key=" +
+                APIKEY;
+            
+
+            //Uses HTTP client to get the JSON from the web
+            String movieInfoJSON = new WebClient().DownloadString(movieAPISimilarLink);
+
+            dynamic jsonObj = JsonConvert.DeserializeObject<dynamic>(movieInfoJSON);
+            
+
+            List<RelatedMovie> relatedMovies = new List<RelatedMovie>();
+            // Storing the realted movies title and imdb link in a list 
+            for (int i = 0; i < jsonObj["results"].Count; i++)
+            {
+                // getting the imbd link by making an api call 
+                String id = jsonObj["results"][i].id;
+                String movieAPILinkTwo = "https://api.themoviedb.org/3/movie/" + id +"?api_key=" +
+                APIKEY + "&language=en-US";
+                String movieInfoJSONTwo = new WebClient().DownloadString(movieAPILinkTwo);
+
+                dynamic jsonObjTwo = JsonConvert.DeserializeObject<dynamic>(movieInfoJSONTwo);
+                String IMDBLink = jsonObjTwo.imdb_id;
+
+                RelatedMovie realtedMovie = new RelatedMovie
+                {
+                    RelatedMovieTitle = jsonObj["results"][i].title,
+                    RelatedImdblink = "https://www.imdb.com/title/"+ IMDBLink
+                };
+                relatedMovies.Add(realtedMovie);
+            }
+            Console.WriteLine("Hello");
+
+            return relatedMovies;
         }
     }
     

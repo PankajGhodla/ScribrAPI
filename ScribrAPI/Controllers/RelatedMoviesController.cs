@@ -28,17 +28,30 @@ namespace ScribrAPI.Controllers
         }
 
         // GET: api/RelatedMovies/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<RelatedMovie>> GetRelatedMovie(int id)
+        [HttpGet("GetRelatedMovies{id}")]
+        public async Task<ActionResult<IEnumerable<RelatedMovie>>> GetRelatedMovie(int id)
         {
-            var relatedMovie = await _context.RelatedMovie.FindAsync(id);
 
-            if (relatedMovie == null)
+            var relatedMovies = await _context.RelatedMovie.Select(related => new RelatedMovie
             {
-                return NotFound();
-            }
+                RealtedMovieId = related.RealtedMovieId,
+                MovieId = related.MovieId,
+                RelatedMovieTitle = related.RelatedMovieTitle,
+                RelatedImdblink = related.RelatedImdblink
+            }).ToListAsync();
 
-            return relatedMovie;
+            relatedMovies.RemoveAll(mo => mo.MovieId != id);
+
+            return relatedMovies;
+
+            //var relatedMovie = await _context.RelatedMovie.FindAsync(id);
+
+            //if (relatedMovie == null)
+            // {
+            //    return NotFound();
+            //}
+
+            //return relatedMovie;
         }
 
         // PUT: api/RelatedMovies/5

@@ -6,23 +6,35 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ScribrAPI.Model;
+using ScribrAPI.Helper;
+using ScribrAPI.DAL;
+using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace ScribrAPI.Controllers
 {
+    public class URLDTO
+    {
+        public String URL { get; set; }
+    }
+
     [Route("api/[controller]")]
     [ApiController]
     public class MoviesController : ControllerBase
     {
-        public class URLDTO
-        {
-            public String URL { get; set; }
-        }
 
         private readonly MovieDBContext _context;
+        private Movie newMovie;
+        private string movieID;
 
-        public MoviesController(MovieDBContext context)
+        private IMovieRepository movieRepository;
+        private readonly IMapper _mapper;
+        public MoviesController(MovieDBContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
+            this.movieRepository = new MovieRepository(new MovieDBContext());
+
         }
 
         // GET: api/Movies
@@ -78,12 +90,34 @@ namespace ScribrAPI.Controllers
 
         // POST: api/Movies
         [HttpPost]
-        public async Task<ActionResult<Movie>> PostMovie(URLDTO URL)
+        public async Task<ActionResult<Movie>> PostMovie([FromBody]URLDTO URL)
         {
+           
             String movieID = Helper.MovieHelper.GetMovieFromLink(URL.URL);
             Movie newMovie = Helper.MovieHelper.GetMovieFromID(movieID);
+            
+            
             _context.Movie.Add(newMovie);
             await _context.SaveChangesAsync();
+
+
+            // We are creating a new context so that loading realted movies don't block the api.
+            MovieDBContext tempContext = new MovieDBContext();
+            RelatedMoviesController realtedMoviesController = new RelatedMoviesController(tempContext);
+
+            //// This will be executed in the background.
+            Task addCaptions = Task.Run(async () =>
+            {
+                List<RelatedMovie> relatedMovies = Helper.MovieHelper.GetRelatedMovies(movieID);
+
+                for (int i = 0; i < relatedMovies.Count; i++)
+                {
+                    RelatedMovie relatedMovie = relatedMovies.ElementAt(i);
+                    relatedMovie.MovieId = newMovie.MovieId;
+                    // posting related movies to the database
+                    await realtedMoviesController.PostRelatedMovie(relatedMovie);
+                }
+            });
 
             return CreatedAtAction("GetMovie", new { id = newMovie.MovieId }, newMovie);
         }
@@ -102,6 +136,46 @@ namespace ScribrAPI.Controllers
             await _context.SaveChangesAsync();
 
             return movie;
+        }
+
+        [HttpGet("SearchByMovie/{movieTitle}")]
+        public async Task<ActionResult<IEnumerable<Movie>>> Search(String movieTitle)
+        {
+            var movies = await _context.Movie.Select(movie => new Movie
+            {
+                MovieId = movie.MovieId,
+                MovieTitle = movie.MovieTitle,
+                PosterUrl = movie.PosterUrl,
+                ReleaseDate = movie.ReleaseDate,
+                MovieLength = movie.MovieLength,
+                Imdblink = movie.Imdblink,
+                Discription = movie.Discription,
+                Genres = movie.Genres,
+                IsFavourite = movie.IsFavourite,
+                //RelatedMovie = movie.RelatedMovie
+            }).ToListAsync();
+
+            // only keeping the movies that matches the input string
+            StringComparison comp = StringComparison.OrdinalIgnoreCase;
+            movies.RemoveAll(mo => !mo.MovieTitle.Contains(movieTitle, comp));
+            return movies;
+        }
+
+        [HttpPatch("update/{id}")]
+        public MovieDTO Patch(int id, [FromBody]JsonPatchDocument<MovieDTO> moviePatch)
+        {
+            //get the original movie object from the DB
+            Movie originVideo = movieRepository.GetMovieByID(id);
+           
+            MovieDTO movieDTO = _mapper.Map<MovieDTO>(originVideo);
+            
+            moviePatch.ApplyTo(movieDTO);
+            
+            _mapper.Map(movieDTO, originVideo);
+            //update the movie in DB
+            _context.Update(originVideo);
+            _context.SaveChanges();
+            return movieDTO;
         }
 
         private bool MovieExists(int id)

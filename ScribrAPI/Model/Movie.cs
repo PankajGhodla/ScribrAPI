@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.Serialization;
 
 namespace ScribrAPI.Model
 {
@@ -39,4 +40,32 @@ namespace ScribrAPI.Model
         [InverseProperty("Movie")]
         public virtual ICollection<RelatedMovie> RelatedMovie { get; set; }
     }
+
+    [DataContract]
+    public class MovieDTO
+    {
+        [DataMember]
+        public int MovieId { get; set; }
+
+       
+
+        [DataMember]
+        public string MovieTitle { get; set; }
+        [DataMember]
+        public string PosterUrl { get; set; }
+        [DataMember]
+        public DateTime ReleaseDate { get; set; }
+        [DataMember]
+        public int MovieLength { get; set; }
+        [DataMember]
+        public string Imdblink { get; set; }
+        [DataMember]
+        public string Discription { get; set; }
+        [DataMember]
+        public string Genres { get; set; }
+        [DataMember]
+        public bool IsFavourite { get; set; }
+    }
 }
+
+
