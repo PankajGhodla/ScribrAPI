@@ -161,6 +161,7 @@ namespace ScribrAPI.Controllers
             return movies;
         }
 
+
         [HttpPatch("update/{id}")]
         public MovieDTO Patch(int id, [FromBody]JsonPatchDocument<MovieDTO> moviePatch)
         {
