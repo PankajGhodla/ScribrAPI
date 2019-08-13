@@ -34,7 +34,7 @@ namespace ScribrAPI
                 options.AddPolicy(MyAllowSpecificOrigins,
                 builder =>
                 {
-                    builder.WithOrigins("https://movies12.azurewebsites.net/",
+                    builder.WithOrigins("https://movies12.azurewebsites.net",
                                         "https://movieapiproject.azurewebsites.net/index.html",
                                         "http://localhost:3000")
                                         .AllowAnyHeader()
@@ -68,7 +68,7 @@ namespace ScribrAPI
             // Make sure the CORS middleware is ahead of SignalR.
             app.UseCors(builder =>
             {
-                builder.WithOrigins("http://localhost:3000")
+                builder.WithOrigins("http://localhost:3000","https://movies12.azurewebsites.net")
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials();
