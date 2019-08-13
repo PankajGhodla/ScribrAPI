@@ -36,7 +36,7 @@ namespace ScribrAPI
                 {
                     builder.WithOrigins("https://movies12.azurewebsites.net/",
                                         "https://movieapiproject.azurewebsites.net/index.html",
-                                        "localhost:3000")
+                                        "http://localhost:3000")
                                         .AllowAnyHeader()
                                         .AllowAnyMethod();
                 });
