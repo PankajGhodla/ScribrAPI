@@ -22,12 +22,25 @@ namespace ScribrAPI
         {
             Configuration = configuration;
         }
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(MyAllowSpecificOrigins,
+                builder =>
+                {
+                    builder.WithOrigins("https://movies12.azurewebsites.net/",
+                                        "https://movieapiproject.azurewebsites.net/index.html",
+                                        "localhost:3000")
+                                        .AllowAnyHeader()
+                                        .AllowAnyMethod();
+                });
+            });
 
             //Registering Azure SignalR service
             services.AddSignalR();   
@@ -49,6 +62,8 @@ namespace ScribrAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseCors(MyAllowSpecificOrigins);
+
 
             // Make sure the CORS middleware is ahead of SignalR.
             app.UseCors(builder =>
