@@ -97,6 +97,7 @@ namespace ScribrAPI
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors(MyAllowSpecificOrigins);
             app.UseMvc();
         }
     }
