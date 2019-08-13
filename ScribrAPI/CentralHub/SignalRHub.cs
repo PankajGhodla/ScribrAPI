@@ -10,12 +10,12 @@ namespace ScribrAPI.CentralHub
     {
         public async Task BroadcastMessage()
         {
-            await Clients.All.SendAsync("Connected");
+            await Clients.All.SendAsync("Connect");
         }
 
-        public async Task AddVideo()
+        public async Task MovieAdded()
         {
-            await Clients.All.SendAsync("UpdateVideoList");
+            await Clients.All.SendAsync("UpdateMovieList");
         }
 
 
