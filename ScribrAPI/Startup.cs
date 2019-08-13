@@ -62,7 +62,7 @@ namespace ScribrAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseCors(MyAllowSpecificOrigins);
+           // app.UseCors(MyAllowSpecificOrigins);
 
 
             // Make sure the CORS middleware is ahead of SignalR.
